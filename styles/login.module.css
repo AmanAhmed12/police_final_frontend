@@ -1,0 +1,25 @@
+/* styles/login.module.css */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Applying gradient here as it's a full-page background */
+  background: linear-gradient(135deg, #0f111a 60%, #2866f2 100%);
+  padding: 16px; /* Ensure padding on small screens */
+  box-sizing: border-box; /* Include padding in element's total width/height */
+}
+
+/* Specific overrides or unique styles can stay here if needed,
+   but we'll try to move most to MUI's theme or sx prop. */
+
+/* Basic responsiveness for the paper padding */
+@media (max-width: 600px) {
+  .login-paper {
+    padding: 24px 8px; /* Smaller padding on small screens */
+    border-radius: 12px !important;
+  }
+  .login-container {
+    padding: 16px;
+  }
+}
