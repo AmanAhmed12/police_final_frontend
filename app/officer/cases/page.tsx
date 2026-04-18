@@ -24,7 +24,10 @@ import {
     MenuItem,
     CircularProgress,
     IconButton,
-    TablePagination
+    TablePagination,
+    TextField,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -54,10 +57,15 @@ export default function OfficerCasesPage() {
 
     // Status update state (for the dialog)
     const [newStatus, setNewStatus] = useState('');
+    const [remarks, setRemarks] = useState('');
 
     // Pagination State
     const [page, setPage] = useState(0);
     const rowsPerPage = 10;
+
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' | 'info' | 'warning' });
+
+    const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -85,6 +93,7 @@ export default function OfficerCasesPage() {
     const handleOpenDialog = async (caseItem: Complaint) => {
         setSelectedCase(caseItem);
         setNewStatus(caseItem.status);
+        setRemarks(caseItem.remarks || '');
         setSuspectDetails([]);
         if (caseItem.suspectIds && caseItem.suspectIds.length > 0) {
             try {
@@ -238,14 +247,20 @@ export default function OfficerCasesPage() {
     const handleUpdateStatus = async () => {
         if (!selectedCase || !newStatus) return;
 
+        if (newStatus === 'RESOLVED' && !remarks.trim()) {
+            setSnackbar({ open: true, message: "Please provide resolution remarks", severity: 'warning' });
+            return;
+        }
+
         setStatusUpdateLoading(true);
         try {
-            await updateComplaintStatus(selectedCase.id, newStatus, token);
+            await updateComplaintStatus(selectedCase.id, newStatus, token, remarks);
+            setSnackbar({ open: true, message: "Status updated successfully!", severity: 'success' });
             // Refresh list and close dialog or update local state
             await fetchCases();
             handleCloseDialog();
         } catch (error) {
-            alert("Failed to update status");
+            setSnackbar({ open: true, message: "Failed to update status", severity: 'error' });
         } finally {
             setStatusUpdateLoading(false);
         }
@@ -448,31 +463,49 @@ export default function OfficerCasesPage() {
 
                                 <Grid size={{ xs: 12 }}>
                                     <Divider sx={{ my: 2 }} />
-                                    <Grid container spacing={2} alignItems="center">
-                                        <Grid size={{ xs: 12, sm: 6 }}>
+                                    <Grid container spacing={2} alignItems="flex-start">
+                                        <Grid size={{ xs: 12, sm: 4 }}>
                                             <Typography variant="h6">Update Status</Typography>
                                         </Grid>
-                                        <Grid size={{ xs: 12, sm: 6 }} display="flex" gap={2}>
-                                            <FormControl fullWidth size="small">
-                                                <InputLabel>Status</InputLabel>
-                                                <Select
-                                                    value={newStatus}
-                                                    label="Status"
-                                                    onChange={(e) => setNewStatus(e.target.value)}
+                                        <Grid size={{ xs: 12, sm: 8 }}>
+                                            <Box display="flex" gap={2} mb={newStatus === 'RESOLVED' ? 2 : 0}>
+                                                <FormControl fullWidth size="small">
+                                                    <InputLabel>Status</InputLabel>
+                                                    <Select
+                                                        value={newStatus}
+                                                        label="Status"
+                                                        onChange={(e) => setNewStatus(e.target.value)}
+                                                    >
+                                                        <MenuItem value="ASSIGNED">Assigned</MenuItem>
+                                                        <MenuItem value="IN_INVESTIGATION">In Investigation</MenuItem>
+                                                        <MenuItem value="RESOLVED">Resolved</MenuItem>
+                                                        <MenuItem value="CLOSED">Closed</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={handleUpdateStatus}
+                                                    disabled={statusUpdateLoading}
+                                                    sx={{ minWidth: 100 }}
                                                 >
-                                                    <MenuItem value="PENDING">Pending</MenuItem>
-                                                    <MenuItem value="IN_INVESTIGATION">In Investigation</MenuItem>
-                                                    <MenuItem value="RESOLVED">Resolved</MenuItem>
-                                                    <MenuItem value="CLOSED">Closed</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                            <Button
-                                                variant="contained"
-                                                onClick={handleUpdateStatus}
-                                                disabled={statusUpdateLoading}
-                                            >
-                                                Update
-                                            </Button>
+                                                    {statusUpdateLoading ? <CircularProgress size={24} /> : "Update"}
+                                                </Button>
+                                            </Box>
+
+                                            {newStatus === 'RESOLVED' && (
+                                                <TextField
+                                                    fullWidth
+                                                    multiline
+                                                    rows={3}
+                                                    label="Resolution Remarks"
+                                                    placeholder="Enter details about how the case was resolved..."
+                                                    value={remarks}
+                                                    onChange={(e) => setRemarks(e.target.value)}
+                                                    required
+                                                    error={!remarks.trim()}
+                                                    helperText={!remarks.trim() ? "Remarks are required for RESOLVED status" : ""}
+                                                />
+                                            )}
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -481,6 +514,17 @@ export default function OfficerCasesPage() {
                     </>
                 )}
             </Dialog>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }

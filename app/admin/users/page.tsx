@@ -435,6 +435,7 @@ export default function UsersPage() {
     // Snackbar State
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info' | 'warning'>('success');
 
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
@@ -447,7 +448,9 @@ export default function UsersPage() {
             const data = await getUsers(token);
             setUsers(data);
         } catch (error: any) {
-            alert(error.message || "Failed to load users");
+            setSnackbarMessage(error.message || "Failed to load users");
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
@@ -558,9 +561,12 @@ export default function UsersPage() {
             const history = await getChatHistory(targetUser.id, token);
             setChatHistory(history);
             setSnackbarMessage(`Message sent to ${targetUser.fullName}`);
+            setSnackbarSeverity('success');
             setSnackbarOpen(true);
         } catch (error: any) {
-            alert(error.message || "Failed to send message");
+            setSnackbarMessage(error.message || "Failed to send message");
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         } finally {
             setSendingMessage(false);
         }
@@ -580,7 +586,9 @@ export default function UsersPage() {
     // Save user (add/update)
     const handleSave = async () => {
         if (!currentUser && formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
+            setSnackbarMessage("Passwords do not match");
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
             return;
         }
 
@@ -599,9 +607,12 @@ export default function UsersPage() {
             await fetchUsers();
             handleCloseDialog();
             setSnackbarMessage(currentUser ? "User updated successfully" : "User created successfully");
+            setSnackbarSeverity('success');
             setSnackbarOpen(true);
         } catch (error: any) {
-            alert(error.message || "Operation failed");
+            setSnackbarMessage(error.message || "Operation failed");
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
@@ -622,9 +633,12 @@ export default function UsersPage() {
             setOpenDeleteDialog(false);
             setUserToDelete(null);
             setSnackbarMessage("User deleted successfully");
+            setSnackbarSeverity('info');
             setSnackbarOpen(true);
         } catch (error: any) {
-            alert(error.message || "Failed to delete user");
+            setSnackbarMessage(error.message || "Failed to delete user");
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
@@ -910,14 +924,15 @@ export default function UsersPage() {
             {/* Success Snackbar */}
             <Snackbar
                 open={snackbarOpen}
-                autoHideDuration={10000}
+                autoHideDuration={4000}
                 onClose={handleCloseSnackbar}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
-                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} variant="filled" sx={{ width: '100%' }}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
+
             {/* Message User Dialog */}
             <Dialog
                 open={openMessageDialog}

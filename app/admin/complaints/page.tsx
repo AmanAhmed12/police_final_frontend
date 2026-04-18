@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Grid, Card, CardContent, Chip, CircularProgress, TablePagination } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
-import { getAllComplaints, deleteComplaint, updateComplaintStatus, Complaint } from '@/app/services/complaintService';
+import { getAllComplaints, deleteComplaint, updateComplaintStatus, updateComplaintFir, Complaint } from '@/app/services/complaintService';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Snackbar, Alert } from '@mui/material';
 
 export default function ComplaintsPage() {
     const token = useSelector((state: RootState) => state.auth.user?.token);
@@ -19,6 +19,10 @@ export default function ComplaintsPage() {
     const [statusDialogOpen, setStatusDialogOpen] = useState(false);
     const [selectedCase, setSelectedCase] = useState<Complaint | null>(null);
     const [statusToUpdate, setStatusToUpdate] = useState<string>('');
+
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' | 'info' | 'warning' });
+
+    const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
 
     // Pagination State
     const [page, setPage] = useState(0);
@@ -57,12 +61,13 @@ export default function ComplaintsPage() {
         if (caseToDelete && token) {
             try {
                 await deleteComplaint(caseToDelete, token);
+                setSnackbar({ open: true, message: "Complaint deleted successfully!", severity: 'info' });
                 await fetchComplaints();
                 setDeleteDialogOpen(false);
                 setCaseToDelete(null);
             } catch (error) {
                 console.error("Delete failed", error);
-                alert("Failed to delete complaint");
+                setSnackbar({ open: true, message: "Failed to delete complaint", severity: 'error' });
             }
         }
     };
@@ -78,20 +83,36 @@ export default function ComplaintsPage() {
         if (selectedCase && statusToUpdate && token) {
             try {
                 await updateComplaintStatus(selectedCase.id, statusToUpdate, token);
+                setSnackbar({ open: true, message: "Status updated successfully!", severity: 'success' });
                 await fetchComplaints();
                 setStatusDialogOpen(false);
                 setStatusToUpdate('');
                 setSelectedCase(null);
             } catch (error) {
                 console.error("Status update failed", error);
-                alert("Failed to update status");
+                setSnackbar({ open: true, message: "Failed to update status", severity: 'error' });
             }
         }
     };
 
 
+    const handleCreateFir = async (id: number) => {
+        if (token) {
+            try {
+                await updateComplaintFir(id, 1, token);
+                await updateComplaintStatus(id, 'PENDING', token);
+                setSnackbar({ open: true, message: "FIR created successfully!", severity: 'success' });
+                await fetchComplaints();
+            } catch (error) {
+                console.error("Failed to create FIR", error);
+                setSnackbar({ open: true, message: "Failed to create FIR", severity: 'error' });
+            }
+        }
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
+
             case 'PENDING': return 'warning';
             case 'IN_INVESTIGATION': return 'info';
             case 'RESOLVED': return 'success';
@@ -114,7 +135,7 @@ export default function ComplaintsPage() {
             ) : (
                 <>
                     <Grid container spacing={3}>
-                        {complaints.length === 0 ? (
+                        {complaints.filter(c => c.fir !== 1).length === 0 ? (
                             <Grid size={{ xs: 12 }}>
                                 <Box p={3} textAlign="center">
                                     <Typography color="text.secondary">No complaints found.</Typography>
@@ -122,6 +143,7 @@ export default function ComplaintsPage() {
                             </Grid>
                         ) : (
                             complaints
+                                .filter(c => c.fir !== 1)
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((complaint) => (
                                     <Grid size={{ xs: 12, md: 6, lg: 4 }} key={complaint.id}>
@@ -132,8 +154,8 @@ export default function ComplaintsPage() {
                                                         #{complaint.id}
                                                     </Typography>
                                                     <Chip
-                                                        label={complaint.status}
-                                                        color={getStatusColor(complaint.status)}
+                                                        label="PENDING"
+                                                        color="warning"
                                                         size="small"
                                                     />
                                                 </Box>
@@ -168,6 +190,14 @@ export default function ComplaintsPage() {
                                             <Box p={2} pt={0} display="flex" justifyContent="flex-end" gap={1}>
                                                 <Button
                                                     size="small"
+                                                    color="success"
+                                                    variant="contained"
+                                                    onClick={() => handleCreateFir(complaint.id)}
+                                                >
+                                                    Create FIR
+                                                </Button>
+                                                <Button
+                                                    size="small"
                                                     color="error"
                                                     variant="outlined"
                                                     onClick={() => handleDeleteClick(complaint.id)}
@@ -188,11 +218,11 @@ export default function ComplaintsPage() {
                                 ))
                         )}
                     </Grid>
-                    {complaints.length > 0 && (
+                    {complaints.filter(c => c.fir !== 1).length > 0 && (
                         <TablePagination
                             rowsPerPageOptions={[10]}
                             component="div"
-                            count={complaints.length}
+                            count={complaints.filter(c => c.fir !== 1).length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
@@ -239,6 +269,17 @@ export default function ComplaintsPage() {
                     <Button onClick={confirmDelete} color="error" variant="contained">Delete</Button>
                 </DialogActions>
             </Dialog>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }

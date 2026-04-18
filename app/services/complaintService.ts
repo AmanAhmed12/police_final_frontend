@@ -16,10 +16,12 @@ export interface Complaint {
     assignedOfficerName?: string;
     evidenceFiles?: string[];
     suspectIds?: number[];
+    fir?: number;
     createdAt: string;
     updatedAt?: string;
     updatedById?: number;
     updatedByName?: string;
+    remarks?: string;
 }
 
 const getAuthHeader = (token?: string) => ({
@@ -79,8 +81,12 @@ export const getMyAssignedComplaints = async (token?: string) => {
     return await response.json();
 };
 
-export const updateComplaintStatus = async (id: number, status: string, token?: string) => {
-    const response = await fetch(`${API_BASE_URL}/api/complaints/${id}/status?status=${status}`, {
+export const updateComplaintStatus = async (id: number, status: string, token?: string, remarks?: string) => {
+    let url = `${API_BASE_URL}/api/complaints/${id}/status?status=${status}`;
+    if (remarks) {
+        url += `&remarks=${encodeURIComponent(remarks)}`;
+    }
+    const response = await fetch(url, {
         method: "PATCH",
         headers: {
             Authorization: `Bearer ${token}`,
@@ -90,6 +96,21 @@ export const updateComplaintStatus = async (id: number, status: string, token?: 
 
     if (!response.ok) {
         throw new Error("Failed to update status");
+    }
+    return await response.json();
+};
+
+export const updateComplaintFir = async (id: number, fir: number, token?: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/complaints/${id}/fir?fir=${fir}`, {
+        method: "PATCH",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to update FIR status");
     }
     return await response.json();
 };

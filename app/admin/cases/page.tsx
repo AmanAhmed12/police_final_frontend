@@ -24,7 +24,9 @@ import {
     CircularProgress,
     Chip,
     Tabs,
-    Tab
+    Tab,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -60,13 +62,18 @@ export default function CasesPage() {
     const [statusDialogOpen, setStatusDialogOpen] = useState(false);
     const [statusToUpdate, setStatusToUpdate] = useState<string>('');
 
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' | 'info' | 'warning' });
+
+    const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
+
     // Fetch Data
     const fetchData = async () => {
         setLoading(true);
         try {
             // Fetch Complaints
             const complaintsData = await getAllComplaints(token);
-            setCases(complaintsData);
+            const casesData = complaintsData.filter((c: Complaint) => c.fir === 1);
+            setCases(casesData);
 
             // Fetch Officers
             const usersData = await getUsers(token);
@@ -109,10 +116,13 @@ export default function CasesPage() {
         if (selectedCase && selectedOfficerId) {
             try {
                 await assignOfficerToComplaint(selectedCase.id, parseInt(selectedOfficerId), token);
+                // After assignment, update status to ASSIGNED
+                await updateComplaintStatus(selectedCase.id, 'ASSIGNED', token);
+                setSnackbar({ open: true, message: "Officer assigned successfully!", severity: 'success' });
                 await fetchData(); // Refresh list
                 handleClose();
             } catch (error) {
-                alert("Failed to assign officer");
+                setSnackbar({ open: true, message: "Failed to assign officer", severity: 'error' });
             }
         }
     };
@@ -127,12 +137,13 @@ export default function CasesPage() {
         if (caseToDelete && token) {
             try {
                 await deleteComplaint(caseToDelete, token);
+                setSnackbar({ open: true, message: "Case deleted successfully!", severity: 'info' });
                 await fetchData();
                 setDeleteDialogOpen(false);
                 setCaseToDelete(null);
             } catch (error) {
                 console.error("Delete failed", error);
-                alert("Failed to delete complaint");
+                setSnackbar({ open: true, message: "Failed to delete case", severity: 'error' });
             }
         }
     };
@@ -148,13 +159,14 @@ export default function CasesPage() {
         if (selectedCase && statusToUpdate && token) {
             try {
                 await updateComplaintStatus(selectedCase.id, statusToUpdate, token);
+                setSnackbar({ open: true, message: "Status updated successfully!", severity: 'success' });
                 await fetchData();
                 setStatusDialogOpen(false);
                 setStatusToUpdate('');
                 setSelectedCase(null);
             } catch (error) {
                 console.error("Status update failed", error);
-                alert("Failed to update status");
+                setSnackbar({ open: true, message: "Failed to update status", severity: 'error' });
             }
         }
     };
@@ -162,6 +174,7 @@ export default function CasesPage() {
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'PENDING': return 'warning';
+            case 'ASSIGNED': return 'secondary';
             case 'IN_INVESTIGATION': return 'info';
             case 'RESOLVED': return 'success';
             case 'CLOSED': return 'default';
@@ -324,6 +337,7 @@ export default function CasesPage() {
                                 onChange={(e) => setStatusToUpdate(e.target.value)}
                             >
                                 <MenuItem value="PENDING">Pending</MenuItem>
+                                <MenuItem value="ASSIGNED">Assigned</MenuItem>
                                 <MenuItem value="IN_INVESTIGATION">In Investigation</MenuItem>
                                 <MenuItem value="RESOLVED">Resolved</MenuItem>
                                 <MenuItem value="CLOSED">Closed</MenuItem>
@@ -348,6 +362,17 @@ export default function CasesPage() {
                     <Button onClick={confirmDelete} color="error" variant="contained">Delete</Button>
                 </DialogActions>
             </Dialog>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }

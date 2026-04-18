@@ -55,6 +55,8 @@ export default function FileComplaintPage() {
     const [activeStep, setActiveStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info' | 'warning'>('success');
 
     const [formData, setFormData] = useState({
         title: '',
@@ -132,7 +134,9 @@ export default function FileComplaintPage() {
             const remainingSlots = 3 - selectedImages.length;
 
             if (remainingSlots <= 0) {
-                alert("Maximum 3 images allowed");
+                setSnackbarMessage("Maximum 3 images allowed");
+                setSnackbarSeverity('warning');
+                setSnackbarOpen(true);
                 return;
             }
 
@@ -199,7 +203,9 @@ export default function FileComplaintPage() {
             }, 2000);
         } catch (error) {
             console.error("Complaint submission error:", error);
-            alert("Failed to submit complaint. Please try again.");
+            setSnackbarMessage("Failed to submit complaint. Please try again.");
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
             setLoading(false);
         }
     };
@@ -504,8 +510,8 @@ export default function FileComplaintPage() {
                 onClose={() => setSnackbarOpen(false)}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%', boxShadow: 4 }}>
-                    {t.successMessage}
+                <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%', boxShadow: 4 }} variant="filled">
+                    {snackbarSeverity === 'success' ? t.successMessage : snackbarMessage}
                 </Alert>
             </Snackbar>
         </Container>
