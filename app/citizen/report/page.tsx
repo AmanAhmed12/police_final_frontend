@@ -141,12 +141,27 @@ export default function ReportDashboard() {
         }
     };
 
-    const handleDownload = (pdfUrl?: string) => {
+    const handleDownload = async (pdfUrl?: string) => {
         if (!pdfUrl) {
             showMessage("The official document is still being digitally signed. Please check back in a few minutes.", "info");
             return;
         }
-        window.open(pdfUrl, '_blank');
+
+        try {
+            const response = await fetch(pdfUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `official_report_${Date.now()}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Download failed:", error);
+            window.open(pdfUrl, '_blank');
+        }
     };
 
     const handleDelete = async (id: string) => {

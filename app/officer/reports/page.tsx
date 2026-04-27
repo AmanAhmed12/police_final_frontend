@@ -86,6 +86,29 @@ export default function OfficerReportsManagement() {
         fetchReports();
     }, [token]);
 
+    const handleDownload = async (pdfUrl?: string) => {
+        if (!pdfUrl) {
+            showMessage("The certificate is not available.", "info");
+            return;
+        }
+
+        try {
+            const response = await fetch(pdfUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `police_certificate_${Date.now()}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Download failed:", error);
+            window.open(pdfUrl, '_blank');
+        }
+    };
+
     const handleAccept = async (id: string) => {
         if (!token) return;
         setActionLoading(id);
@@ -331,7 +354,7 @@ export default function OfficerReportsManagement() {
                                                 {row.status?.toUpperCase() === 'PROCESSED' && row.pdfUrl && (
                                                     <Tooltip title="View Certificate">
                                                         <IconButton
-                                                            onClick={() => window.open(row.pdfUrl, '_blank')}
+                                                            onClick={() => handleDownload(row.pdfUrl)}
                                                             size="small"
                                                             sx={{ color: '#10b981', bgcolor: 'rgba(16, 185, 129, 0.05)' }}
                                                         >
@@ -460,7 +483,7 @@ export default function OfficerReportsManagement() {
                                 fullWidth
                                 variant="outlined"
                                 color="success"
-                                onClick={() => window.open(selectedReport.pdfUrl, '_blank')}
+                                onClick={() => handleDownload(selectedReport.pdfUrl)}
                                 startIcon={<PdfIcon />}
                                 sx={{ borderRadius: '12px', py: 1.5, fontWeight: 700 }}
                             >
