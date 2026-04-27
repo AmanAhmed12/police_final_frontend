@@ -24,7 +24,7 @@ export default function ComplaintsPage() {
 
     const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
 
-    // Pagination State
+   
     const [page, setPage] = useState(0);
     const rowsPerPage = 10;
 
@@ -51,7 +51,7 @@ export default function ComplaintsPage() {
         fetchComplaints();
     }, [token]);
 
-    // Delete Logic
+   
     const handleDeleteClick = (id: number) => {
         setCaseToDelete(id);
         setDeleteDialogOpen(true);
@@ -72,7 +72,7 @@ export default function ComplaintsPage() {
         }
     };
 
-    // Status Update Logic
+   
     const handleStatusClick = (caseItem: Complaint) => {
         setSelectedCase(caseItem);
         setStatusToUpdate(caseItem.status);
@@ -232,7 +232,7 @@ export default function ComplaintsPage() {
                 </>
             )}
 
-            {/* Status Update Dialog */}
+           
             <Dialog open={statusDialogOpen} onClose={() => setStatusDialogOpen(false)} maxWidth="xs" fullWidth>
                 <DialogTitle>Update Status</DialogTitle>
                 <DialogContent>

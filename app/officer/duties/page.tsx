@@ -44,7 +44,7 @@ export default function OfficerDutiesPage() {
     const token = loggedInUser?.token;
     const userId = loggedInUser?.id;
 
-    // Pagination & Search
+   
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
@@ -61,7 +61,7 @@ export default function OfficerDutiesPage() {
         if (!token) return;
         setLoading(true);
         try {
-            // Because AuthResponse may not contain the ID, we fallback to getProfile
+          
             let actualUserId = userId;
             if (!actualUserId) {
                 const { getProfile } = await import('@/app/services/authService');

@@ -58,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
+       
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
@@ -94,7 +94,7 @@ export default function OfficerTopbar({ onSidebarOpen }: OfficerTopbarProps) {
             router.push('/Login');
         } catch (error) {
             console.error('Logout failed:', error);
-            // Still logout from frontend even if backend fails
+           
             dispatch(logout());
             router.push('/Login');
         }
@@ -106,7 +106,7 @@ export default function OfficerTopbar({ onSidebarOpen }: OfficerTopbarProps) {
             elevation={0}
             sx={{
                 backdropFilter: "blur(20px)",
-                backgroundColor: "rgba(15, 17, 26, 0.7) !important", // Use alpha version of background
+                backgroundColor: "rgba(15, 17, 26, 0.7) !important", 
             }}
         >
             <Toolbar sx={{ minHeight: { xs: 64, md: 80 } }}>
@@ -115,7 +115,7 @@ export default function OfficerTopbar({ onSidebarOpen }: OfficerTopbarProps) {
                     aria-label="open drawer"
                     edge="start"
                     onClick={onSidebarOpen}
-                    sx={{ mr: 2, display: { md: "none" } }} // Hide on desktop
+                    sx={{ mr: 2, display: { md: "none" } }} 
                 >
                     <MenuIcon />
                 </IconButton>

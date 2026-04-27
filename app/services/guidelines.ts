@@ -6,7 +6,7 @@ export interface Guideline {
     title: string;
     content: string;
     priority: 'High' | 'Medium' | 'Low';
-    createdByName: string; // From our DTO
+    createdByName: string; 
     createdAt: string;
 }
 

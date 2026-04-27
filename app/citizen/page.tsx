@@ -8,7 +8,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import StatCard from '@/components/admin/StatCard'; // Keeping this reuse
+import StatCard from '@/components/admin/StatCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store';
 import { getMyComplaints, Complaint } from '@/app/services/complaintService';
@@ -157,7 +157,7 @@ export default function CitizenDashboardPage() {
                                 </List>
                             )}
 
-                            {/* In a real app, this would link to a full list page */}
+                           
                             {recentComplaints.length > 0 && (
                                 <Button variant="text" sx={{ mt: 2 }} startIcon={<HistoryIcon />} onClick={() => alert("History page coming soon!")}>
                                     View All History

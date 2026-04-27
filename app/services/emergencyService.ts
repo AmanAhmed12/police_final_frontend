@@ -1,6 +1,6 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 
-// --- Types ---
+
 export interface EmergencyContact {
     id: number;
     name: string;
@@ -11,17 +11,17 @@ export interface EmergencyContact {
     adminId?: number;
 }
 
-// --- Professional API Helper ---
+
 async function apiRequest<T>(
     endpoint: string,
     method: string,
     token?: string,
     body?: any
 ): Promise<T> {
-    // 1. Silent Guard: If logging out, GET requests should just return empty data
+   
     if (!token) {
-        if (method === "GET") return [] as unknown as T; // Return empty array for contacts
-        throw new Error("AUTH_REQUIRED"); // Keep error for POST/PUT/DELETE
+        if (method === "GET") return [] as unknown as T; 
+        throw new Error("AUTH_REQUIRED");
     }
 
     const headers: Record<string, string> = {
@@ -49,7 +49,7 @@ async function apiRequest<T>(
     return text ? JSON.parse(text) : ({} as T);
 }
 
-// --- Exported Services ---
+
 
 export const getEmergencyContacts = async (token?: string) =>
     apiRequest<EmergencyContact[]>("/api/emergency-contacts", "GET", token);

@@ -36,7 +36,7 @@ export const registerUser = async (userData: any) => {
             const errorText = await response.text();
             throw new Error(errorText || "Registration failed");
         }
-        return true; // Or return response data if needed
+        return true;
     } catch (error) {
         throw error;
     }
@@ -124,13 +124,13 @@ export const logoutUser = async (token: string) => {
         if (!response.ok) {
             console.warn("Logout failed:", data);
         }
-        // Clear local storage regardless of backend response
+       
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         return data;
     } catch (error) {
         console.error("Logout error:", error);
-        // Even if backend logout fails, clear frontend state
+       
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         throw error;
@@ -144,7 +144,6 @@ export const updateProfile = async (formData: FormData, token?: string) => {
             method: "PUT",
             headers: {
                 Authorization: `Bearer ${token}`,
-                // Don't set Content-Type for FormData - browser will set it with boundary
             },
             body: formData,
         });

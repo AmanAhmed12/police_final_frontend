@@ -30,16 +30,16 @@ import {
 } from '@mui/material';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Added for improved UI
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; 
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store';
 import { getAllComplaints, assignOfficerToComplaint, deleteComplaint, updateComplaintStatus, Complaint } from '@/app/services/complaintService'; // Updated Import
 import { getUsers } from '@/app/services/authService';
 
-// Define User Interface locally if not imported (but we use 'any' or specific shape from service)
+
 interface Officer {
     id: number;
-    fullName: string; // Changed from name to fullName to match User interface
+    fullName: string; 
     role: string;
 }
 
@@ -47,12 +47,12 @@ export default function CasesPage() {
     const token = useSelector((state: RootState) => state.auth.user?.token);
 
     const [cases, setCases] = useState<Complaint[]>([]);
-    const [officers, setOfficers] = useState<Officer[]>([]); // To store fetched officers
+    const [officers, setOfficers] = useState<Officer[]>([]); 
     const [loading, setLoading] = useState(true);
 
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedCase, setSelectedCase] = useState<Complaint | null>(null);
-    const [selectedOfficerId, setSelectedOfficerId] = useState<string>(''); // Reduced usage of direct string for ID
+    const [selectedOfficerId, setSelectedOfficerId] = useState<string>(''); 
 
     const [tabValue, setTabValue] = useState(0);
 
@@ -66,18 +66,18 @@ export default function CasesPage() {
 
     const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
 
-    // Fetch Data
+   
     const fetchData = async () => {
         setLoading(true);
         try {
-            // Fetch Complaints
+           
             const complaintsData = await getAllComplaints(token);
             const casesData = complaintsData.filter((c: Complaint) => c.fir === 1);
             setCases(casesData);
 
-            // Fetch Officers
+           
             const usersData = await getUsers(token);
-            // Filter for officers
+           
             const officerList = usersData.filter((u: any) => u.role === 'OFFICER' || u.role === 'Officer');
             setOfficers(officerList);
 
@@ -94,10 +94,10 @@ export default function CasesPage() {
         }
     }, [token]);
 
-    // Assign Logic
+   
     const handleAssignClick = (caseItem: Complaint) => {
         setSelectedCase(caseItem);
-        // Pre-select current officer if assigned
+       
         setSelectedOfficerId(caseItem.assignedOfficerId ? caseItem.assignedOfficerId.toString() : '');
         setOpenDialog(true);
     };
@@ -116,10 +116,10 @@ export default function CasesPage() {
         if (selectedCase && selectedOfficerId) {
             try {
                 await assignOfficerToComplaint(selectedCase.id, parseInt(selectedOfficerId), token);
-                // After assignment, update status to ASSIGNED
+              
                 await updateComplaintStatus(selectedCase.id, 'ASSIGNED', token);
                 setSnackbar({ open: true, message: "Officer assigned successfully!", severity: 'success' });
-                await fetchData(); // Refresh list
+                await fetchData();
                 handleClose();
             } catch (error) {
                 setSnackbar({ open: true, message: "Failed to assign officer", severity: 'error' });
@@ -127,7 +127,7 @@ export default function CasesPage() {
         }
     };
 
-    // Delete Logic
+  
     const handleDeleteClick = (id: number) => {
         setCaseToDelete(id);
         setDeleteDialogOpen(true);
@@ -148,7 +148,7 @@ export default function CasesPage() {
         }
     };
 
-    // Status Update Logic
+   
     const handleStatusClick = (caseItem: Complaint) => {
         setSelectedCase(caseItem);
         setStatusToUpdate(caseItem.status);
@@ -182,7 +182,7 @@ export default function CasesPage() {
         }
     };
 
-    // Filter Logic
+  
     const filteredCases = tabValue === 0
         ? cases.filter(c => !c.assignedOfficerId)
         : cases;
@@ -296,7 +296,7 @@ export default function CasesPage() {
                 </Paper>
             )}
 
-            {/* Assignment Dialog */}
+           
             <Dialog open={openDialog} onClose={handleClose} maxWidth="xs" fullWidth>
                 <DialogTitle>Assign Officer</DialogTitle>
                 <DialogContent>
@@ -351,7 +351,7 @@ export default function CasesPage() {
                 </DialogActions>
             </Dialog>
 
-            {/* Delete Confirmation Dialog */}
+           
             <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                 <DialogTitle>Delete Complaint?</DialogTitle>
                 <DialogContent>

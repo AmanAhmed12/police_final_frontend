@@ -46,7 +46,7 @@ export default function NotificationDropdown() {
     const [displayLimit, setDisplayLimit] = useState(2);
     const [chatTarget, setChatTarget] = useState<{ id: number; fullName: string } | null>(null);
 
-    // Using global state from Redux
+   
     const { notifications, unreadCount, loading } = useSelector((state: RootState) => state.notifications);
     const currentUser = useSelector((state: RootState) => state.auth.user);
     const token = currentUser?.token;
@@ -57,7 +57,7 @@ export default function NotificationDropdown() {
 
     const handleClose = () => {
         setAnchorEl(null);
-        setDisplayLimit(2); // Reset limit when closing
+        setDisplayLimit(2);
     };
 
     const getAvatarColor = (name: string) => {
@@ -71,7 +71,7 @@ export default function NotificationDropdown() {
 
     const handleNotificationClick = async (notif: Notification) => {
         try {
-            // Mark as read first if unread
+           
             if (!notif.read) {
                 await markAsRead(notif.id, token);
                 dispatch(updateNotificationReadStatus({ id: notif.id, read: true }));
@@ -82,7 +82,7 @@ export default function NotificationDropdown() {
             const senderId = notif.sender?.id ? Number(notif.sender.id) : null;
             const senderName = notif.sender?.fullName;
 
-            // Determine if I am the sender using ID or Name as fallback
+          
             const isMeSender = (myId && senderId && myId === senderId) ||
                 (myName && senderName && myName === senderName);
 
@@ -119,7 +119,7 @@ export default function NotificationDropdown() {
             const unreadIds = notifications.filter(n => !n.read).map(n => n.id);
             if (unreadIds.length === 0) return;
 
-            // Optimistic update could be done here, but let's be safe
+           
             await Promise.all(unreadIds.map(id => markAsRead(id, token)));
             dispatch(markAllAsReadSuccess());
         } catch (error) {

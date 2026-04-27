@@ -61,7 +61,7 @@ export const citizenTheme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundColor: "#1f2433",
-                    backgroundImage: "none", // Remove default gradient overlay
+                    backgroundImage: "none", 
                     borderRadius: "12px",
                     boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
                 },
@@ -97,7 +97,7 @@ export const citizenTheme = createTheme({
         MuiAppBar: {
             styleOverrides: {
                 root: {
-                    backgroundColor: "#0f111a", // Match body bg for seamless look or paper if preferred
+                    backgroundColor: "#0f111a", 
                     backgroundImage: 'none',
                     boxShadow: "none",
                     borderBottom: "1px solid rgba(255,255,255,0.05)",

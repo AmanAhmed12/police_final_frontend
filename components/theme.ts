@@ -3,46 +3,45 @@ import { createTheme } from "@mui/material";
 
 export const darkTheme = createTheme({
     palette: {
-        mode: "dark", // Enable dark mode features (e.g., default text/background)
+        mode: "dark",
         primary: {
-            main: "#2866f2", // Your main dark blue
+            main: "#2866f2",
             light: "#6699ff",
             dark: "#1741a6",
             contrastText: "#ffffff",
         },
         secondary: {
-            main: "#f5f7ff", // Your main white/off-white
+            main: "#f5f7ff", 
             light: "#ffffff",
             dark: "#cccccc",
             contrastText: "#000000",
         },
-        error: { // Good to define for form validation
+        error: {
             main: '#ef5350',
         },
         background: {
-            default: "#0f111a", // Deep dark blue for the overall page background
-            paper: "#1f2433", // Slightly lighter dark blue for card/paper backgrounds
+            default: "#0f111a", 
+            paper: "#1f2433", 
         },
         text: {
-            primary: "#f5f7ff", // White text for primary content
-            secondary: "#a0a4b7", // Lighter grey for secondary text (e.g., labels, hints)
+            primary: "#f5f7ff", 
+            secondary: "#a0a4b7", 
         },
     },
     typography: {
-        fontFamily: "Roboto, sans-serif", // Or your preferred font (e.g., 'Inter', 'sans-serif')
+        fontFamily: "Roboto, sans-serif",
         h5: {
             fontWeight: 700,
-            color: "#2866f2", // Specific color for "Welcome Back"
+            color: "#2866f2", 
         },
         subtitle1: {
-            color: "#a0a4b7", // Color for "Sign in to your account"
+            color: "#a0a4b7", 
         },
         body2: {
-            color: "#a0a4b7", // Color for "Don't have an account?"
+            color: "#a0a4b7", 
         },
     },
     components: {
-        // Global overrides for Material-UI components
         MuiTextField: {
             styleOverrides: {
                 root: {

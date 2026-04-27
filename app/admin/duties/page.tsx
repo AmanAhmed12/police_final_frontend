@@ -42,7 +42,7 @@ import { getUsers } from '@/services/authService';
 
 export default function AdminDutiesPage() {
     const [duties, setDuties] = useState<Duty[]>([]);
-    const [officers, setOfficers] = useState<any[]>([]); // To populate the assign to dropdown
+    const [officers, setOfficers] = useState<any[]>([]); 
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [currentDuty, setCurrentDuty] = useState<Duty | null>(null);
@@ -50,7 +50,7 @@ export default function AdminDutiesPage() {
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
     const token = loggedInUser?.token;
 
-    // Pagination & Search
+
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
@@ -76,7 +76,7 @@ export default function AdminDutiesPage() {
                 getUsers(token)
             ]);
             setDuties(dutiesData);
-            // Filter only officers
+           
             const officersList = usersData.filter((u: any) => u.role?.toLowerCase() === 'officer');
             setOfficers(officersList);
         } catch (error: any) {
@@ -166,7 +166,7 @@ export default function AdminDutiesPage() {
                 title: formData.title,
                 description: formData.description,
                 officerId: Number(formData.officerId),
-                dueDate: formData.dueDate, // Ensure correct format handled by backend
+                dueDate: formData.dueDate, 
                 status: formData.status as any
             };
 
@@ -239,7 +239,7 @@ export default function AdminDutiesPage() {
                 </Button>
             </Box>
 
-            {/* Search Section */}
+           
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
                     <Grid size={{ xs: 12 }}>
@@ -270,7 +270,7 @@ export default function AdminDutiesPage() {
                 </Grid>
             </Paper>
 
-            {/* Duties Table */}
+           
             <Paper sx={{ mt: 3, overflow: 'hidden' }}>
                 <TableContainer>
                     <Table>
@@ -339,7 +339,7 @@ export default function AdminDutiesPage() {
                 />
             </Paper>
 
-            {/* Add/Edit Dialog */}
+         
             <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
                 <DialogTitle>{currentDuty ? 'Edit Duty' : 'Assign New Duty'}</DialogTitle>
                 <DialogContent>
@@ -413,7 +413,7 @@ export default function AdminDutiesPage() {
                 </DialogActions>
             </Dialog>
 
-            {/* Delete Confirmation */}
+           
             <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>

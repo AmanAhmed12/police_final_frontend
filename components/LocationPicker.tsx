@@ -25,7 +25,7 @@ interface LocationPickerProps {
     helperText?: React.ReactNode;
     label?: string;
     placeholder?: string;
-    // Optional initial coordinates (e.g. for edit mode)
+    // Optional initial coordinates 
     initialLat?: number;
     initialLng?: number;
     disabled?: boolean;
@@ -81,7 +81,7 @@ export default function LocationPicker({
         // Debounce slightly to avoid spamming the API while dragging
         const timeoutId = setTimeout(fetchAddress, 800);
         return () => clearTimeout(timeoutId);
-    }, [position]); // We deliberately don't include onChange here to prevent infinite loops if parent re-renders
+    }, [position]);
 
 
     // Component to handle map clicks and move the marker

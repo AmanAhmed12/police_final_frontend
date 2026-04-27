@@ -25,7 +25,6 @@ export default function OfficerDashboard() {
     const [duties, setDuties] = useState<Duty[]>([]);
     const [complaints, setComplaints] = useState<Complaint[]>([]);
 
-    // Aggregations
     const [activeDutiesCount, setActiveDutiesCount] = useState(0);
     const [completedDutiesCount, setCompletedDutiesCount] = useState(0);
     const [assignedComplaintsCount, setAssignedComplaintsCount] = useState(0);
@@ -204,9 +203,9 @@ export default function OfficerDashboard() {
                 ))}
             </Grid>
 
-            {/* Layout Split: Progress Metrics & Timeline */}
+            
             <Grid container spacing={4}>
-                {/* Advanced Progress Metrics instead of generic charts */}
+               
                 <Grid size={{ xs: 12, md: 5 }}>
                     <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
                         <Typography variant="h5" fontWeight="bold" mb={3}>

@@ -37,18 +37,18 @@ import { RootState } from '@/lib/store';
 import { translations, Language } from './translations';
 import dynamic from 'next/dynamic';
 
-// Dynamically import LocationPicker to prevent SSR issues with Leaflet
+
 const LocationPicker = dynamic(() => import('@/components/LocationPicker'), {
     ssr: false,
     loading: () => <Box sx={{ height: 300, bgcolor: 'action.hover', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading Map...</Box>
 });
-// Importing specific sub-properties to satisfy type checker if needed, but 'translations' object is safer.
+
 
 export default function FileComplaintPage() {
     const router = useRouter();
     const token = useSelector((state: RootState) => state.auth.user?.token);
 
-    // Language State
+  
     const [lang, setLang] = useState<Language>('en');
     const t = translations[lang];
 
@@ -68,14 +68,14 @@ export default function FileComplaintPage() {
         description: '',
     });
 
-    // Image State
+  
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
     const [errors, setErrors] = useState<any>({});
     const searchParams = useSearchParams();
 
-    // Auto-fill from URL params (for "File Incident Report" from suspect dossier)
+    
     React.useEffect(() => {
         const title = searchParams.get('title');
         const category = searchParams.get('category');
@@ -127,7 +127,7 @@ export default function FileComplaintPage() {
         }
     };
 
-    // Image Upload Handlers
+  
     const handleImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const filesArray = Array.from(event.target.files);
@@ -142,7 +142,7 @@ export default function FileComplaintPage() {
 
             const filesToProcess = filesArray.slice(0, remainingSlots);
 
-            // Create previews
+           
             const newPreviews = filesToProcess.map(file => URL.createObjectURL(file));
 
             setSelectedImages(prev => [...prev, ...filesToProcess]);
@@ -153,7 +153,7 @@ export default function FileComplaintPage() {
     const removeImage = (index: number) => {
         setSelectedImages(prev => prev.filter((_, i) => i !== index));
         setPreviewUrls(prev => {
-            // Revoke URL to avoid memory leak
+           
             URL.revokeObjectURL(prev[index]);
             return prev.filter((_, i) => i !== index);
         });
@@ -303,7 +303,7 @@ export default function FileComplaintPage() {
                             />
                         </Grid>
 
-                        {/* Image Upload Section */}
+                       
                         <Grid size={{ xs: 12 }}>
                             <Paper variant="outlined" sx={{ p: 3, textAlign: 'center', bgcolor: 'background.default', borderStyle: 'dashed' }}>
                                 <CloudUploadIcon sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
@@ -333,7 +333,7 @@ export default function FileComplaintPage() {
                                     </Button>
                                 </label>
 
-                                {/* Previews */}
+                               
                                 {previewUrls.length > 0 && (
                                     <Box sx={{ display: 'flex', gap: 2, mt: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
                                         {previewUrls.map((url, index) => (
@@ -366,8 +366,7 @@ export default function FileComplaintPage() {
                     </Grid>
                 );
             case 2:
-                // For review step, we might want to map category keys back to labels if we stored keys
-                // But simplified here for brevity
+               
                 return (
                     <Box>
                         <Typography variant="h6" gutterBottom fontWeight="bold" color="primary">
@@ -429,7 +428,7 @@ export default function FileComplaintPage() {
                     </Typography>
                 </Box>
 
-                {/* Language Switcher */}
+               
                 <ToggleButtonGroup
                     value={lang}
                     exclusive
@@ -503,7 +502,7 @@ export default function FileComplaintPage() {
                 </Box>
             </Paper>
 
-            {/* Success Snackbar */}
+         
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}

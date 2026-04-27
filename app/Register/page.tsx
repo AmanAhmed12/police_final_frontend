@@ -129,7 +129,6 @@ export default function RegisterPage() {
 
   const [loading, setLoading] = useState(false);
 
-  // Dialog State
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");

@@ -6,10 +6,10 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 interface StatCardProps {
     title: string;
     value: string;
-    trend?: string; // e.g., "+12%" or "-5%"
+    trend?: string;
     isPositive?: boolean;
     icon: React.ReactNode;
-    color?: string; // Hex color for the icon background
+    color?: string;
 }
 
 export default function StatCard({ title, value, trend, isPositive, icon, color = "#2866f2" }: StatCardProps) {
@@ -41,7 +41,7 @@ export default function StatCard({ title, value, trend, isPositive, icon, color 
                 <Avatar
                     variant="rounded"
                     sx={{
-                        bgcolor: `${color}22`, // 22 is ~13% opacity
+                        bgcolor: `${color}22`, 
                         color: color,
                         width: 48,
                         height: 48

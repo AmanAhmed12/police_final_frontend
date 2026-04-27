@@ -39,7 +39,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import SecurityIcon from '@mui/icons-material/Security';
 import SearchIcon from '@mui/icons-material/Search';
 
-// Importing the cleaned-up services
+
 import {
     getEmergencyContacts,
     createEmergencyContact,
@@ -56,16 +56,16 @@ export default function EmergencyContactsPage() {
     const [filteredContacts, setFilteredContacts] = useState<EmergencyContact[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Dialog States
+  
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [currentContact, setCurrentContact] = useState<EmergencyContact | null>(null);
     const [contactToDelete, setContactToDelete] = useState<number | null>(null);
 
-    // Auth - Get token from Redux
+
     const token = useSelector((state: RootState) => state.auth.user?.token);
 
-    // Form State
+   
     const [formData, setFormData] = useState<Omit<EmergencyContact, 'id'>>({
         name: '',
         number: '',
@@ -74,16 +74,16 @@ export default function EmergencyContactsPage() {
         priority: 1
     });
 
-    // Pagination state
+   
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // Loading & Snackbar States
+    
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" as "success" | "error" });
     const fetchContacts = useCallback(async () => {
-        // 1. Proactive Guard: If Redux says token is gone, clear local state and STOP.
+       
         if (!token) {
             setContacts([]);
             setFilteredContacts([]);
@@ -93,12 +93,12 @@ export default function EmergencyContactsPage() {
         setFetching(true);
         try {
             const data = await getEmergencyContacts(token);
-            // 2. Only update if we still have a token (prevents state updates on unmounted component)
+           
             if (token) {
                 setContacts(data);
             }
         } catch (error: any) {
-            // 3. Selective Reporting: Ignore auth-related noise during logout transitions
+           
             const silentErrors = ["AUTH_REQUIRED", "SESSION_EXPIRED"];
             if (!silentErrors.includes(error.message)) {
                 setSnackbar({
@@ -116,7 +116,7 @@ export default function EmergencyContactsPage() {
         fetchContacts();
     }, [fetchContacts]);
 
-    // 2. Search Logic (Local filtering)
+   
     useEffect(() => {
         const lowerTerm = searchTerm.toLowerCase();
         const filtered = contacts.filter(contact =>
@@ -125,7 +125,7 @@ export default function EmergencyContactsPage() {
             contact.type.toLowerCase().includes(lowerTerm)
         );
         setFilteredContacts(filtered);
-        setPage(0); // Reset to first page on search
+        setPage(0);
     }, [searchTerm, contacts]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -139,7 +139,7 @@ export default function EmergencyContactsPage() {
 
     const paginatedContacts = filteredContacts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-    // 3. UI Helpers
+   
     const getTypeIcon = (type: string) => {
         switch (type) {
             case 'Police': return <SecurityIcon color="primary" />;
@@ -153,7 +153,7 @@ export default function EmergencyContactsPage() {
         setSnackbar({ open: true, message: msg, severity: sev });
     };
 
-    // 4. Action Handlers
+   
     const handleOpenDialog = (contact?: EmergencyContact) => {
         if (contact) {
             setCurrentContact(contact);
@@ -228,7 +228,7 @@ export default function EmergencyContactsPage() {
                 </Button>
             </Box>
 
-            {/* Search Bar */}
+
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2, display: 'flex', alignItems: 'center', bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.05)' }} elevation={0}>
                 <InputAdornment position="start" sx={{ mr: 1 }}>
                     <SearchIcon sx={{ color: 'text.secondary' }} />
@@ -306,7 +306,7 @@ export default function EmergencyContactsPage() {
                 />
             </Paper>
 
-            {/* Dialogs and Snackbars remain mostly the same but use the updated handlers */}
+           
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
                 <DialogTitle sx={{ fontWeight: 'bold' }}>{currentContact ? 'Edit Contact' : 'New Contact'}</DialogTitle>
                 <DialogContent>

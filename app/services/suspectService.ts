@@ -102,5 +102,5 @@ export const suspectService = {
     }
 };
 
-// Fallback exports for backward compatibility if needed by other components
+
 export const matchSuspects = suspectService.matchSuspects;

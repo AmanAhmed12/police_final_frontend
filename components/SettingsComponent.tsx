@@ -27,22 +27,21 @@ export default function SettingsComponent() {
     const user = useSelector((state: RootState) => state.auth.user);
     const token = user?.token;
 
-    // Profile Picture State
+    
     const [profilePicture, setProfilePicture] = useState<string | null>(
         user?.profilePicture || null
     );
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    // Personal Info State (editable fields)
+   
     const [email, setEmail] = useState(user?.email || "");
     const [username, setUsername] = useState(user?.username || "");
 
-    // Password State
+   
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    // UI State
     const [loading, setLoading] = useState(false);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -50,7 +49,6 @@ export default function SettingsComponent() {
         severity: "success" as "success" | "error",
     });
 
-    // Fetch user profile on mount to ensure data is fresh
     React.useEffect(() => {
         const fetchUserData = async () => {
             if (token) {
@@ -67,7 +65,6 @@ export default function SettingsComponent() {
         fetchUserData();
     }, [token, dispatch]);
 
-    // Update local state when user data changes
     React.useEffect(() => {
         if (user) {
             setEmail(user.email || "");
@@ -76,7 +73,6 @@ export default function SettingsComponent() {
         }
     }, [user]);
 
-    // Handle Profile Picture Upload
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -89,7 +85,6 @@ export default function SettingsComponent() {
         }
     };
 
-    // Handle Profile Update
     const handleProfileUpdate = async () => {
         if (!selectedFile) {
             setSnackbar({
@@ -136,7 +131,6 @@ export default function SettingsComponent() {
         }
     };
 
-    // Handle Personal Info Update
     const handlePersonalInfoUpdate = async () => {
         setLoading(true);
         try {
@@ -175,11 +169,9 @@ export default function SettingsComponent() {
         }
     };
 
-    // Handle Password Change
     const handlePasswordChange = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validation
         if (!currentPassword || !newPassword || !confirmPassword) {
             setSnackbar({
                 open: true,
@@ -209,10 +201,8 @@ export default function SettingsComponent() {
 
         setLoading(true);
         try {
-            // 1. Change Password FIRST (while token username is still valid)
             await changePassword({ currentPassword, newPassword }, token);
 
-            // 2. Check for pending profile changes and save them SECOND
             if (email !== user?.email || username !== user?.username || selectedFile) {
                 const formData = new FormData();
                 formData.append("email", email);
@@ -229,15 +219,12 @@ export default function SettingsComponent() {
                 severity: "success",
             });
 
-            // Auto-logout after short delay
             setTimeout(async () => {
-                // Clear local storage manually as fallback
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 window.location.href = '/Login';
             }, 1500);
 
-            // Clear password fields
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");

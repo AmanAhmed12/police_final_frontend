@@ -42,7 +42,7 @@ export default function MyComplaintsPage() {
     const [loading, setLoading] = useState(true);
     const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
 
-    // Pagination State
+   
     const [page, setPage] = useState(0);
     const rowsPerPage = 10;
 

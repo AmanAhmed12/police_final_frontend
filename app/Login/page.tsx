@@ -1,4 +1,3 @@
-// LoginPage.js (or .tsx)
 "use client";
 import React, { useState } from "react";
 import {
@@ -26,9 +25,9 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { useRouter } from "next/navigation"; // Assuming Next.js for navigation
+import { useRouter } from "next/navigation";
 
-// Define your custom dark blue and white theme for Material-UI
+
 import { loginUser } from "@/services/authService";
 import { darkTheme } from "@/components/theme";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,10 +37,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter(); // Initialize useRouter for navigation
+  const router = useRouter(); 
   const dispatch = useDispatch();
 
-  // Dialog State
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
@@ -72,7 +71,7 @@ export default function LoginPage() {
 
       console.log("Login success:", data);
 
-      // Save user to Redux store
+     
       dispatch(login(data));
 
       setDialogTitle("Success");
@@ -92,15 +91,15 @@ export default function LoginPage() {
 
 
   const handleGoBack = () => {
-    // router.back(); // Navigates back to the previous page
+   
     router.push("/")
   };
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline /> {/* Applies global CSS resets and theme-based background */}
+      <CssBaseline /> 
 
-      {/* The main container that centers its content */}
+      {/* The main container */}
       <Box
         sx={{
           minHeight: '100vh',
@@ -108,7 +107,7 @@ export default function LoginPage() {
           alignItems: 'center',
           justifyContent: 'center',
           background: 'linear-gradient(135deg, #0f111a 60%, #2866f2 100%)',
-          padding: { xs: 2, sm: 3 } // Responsive padding with MUI sx
+          padding: { xs: 2, sm: 3 } 
         }}
       >
         <Paper

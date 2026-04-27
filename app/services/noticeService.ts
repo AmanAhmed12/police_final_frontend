@@ -16,7 +16,7 @@ export interface Notice {
     updatedBy?: UserInfo;
 }
 
-// Helper type for creating/editing notices
+
 export type NoticeInput = Omit<Notice, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>;
 
 async function apiRequest<T>(

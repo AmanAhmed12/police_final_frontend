@@ -57,7 +57,7 @@ export default function ChatHistoryModal({ open, onClose, initialTarget }: ChatH
     useEffect(() => {
         setReplyTo(initialTarget || null);
         if (!initialTarget) {
-            setHistory([]); // Clear history before refetching for "View All"
+            setHistory([]); 
         }
     }, [initialTarget]);
 
@@ -69,21 +69,20 @@ export default function ChatHistoryModal({ open, onClose, initialTarget }: ChatH
             const targetId = target?.id ? Number(target.id) : null;
 
             if (targetId && targetId !== 0) {
-                // Fetch specific chat history with this person
+               
                 data = await getChatHistory(targetId, token);
             } else {
-                // Fetch all notifications (for "View All")
                 data = await getMyNotifications(token);
             }
 
             setHistory(data);
 
-            // If we have data but no confirmed partner yet, pick the most relevant partner
+           
             if (data.length > 0) {
                 const myId = currentUser?.id ? Number(currentUser.id) : null;
                 const myName = currentUser?.fullName;
 
-                // If we don't have a target, or if the history we fetched seems to be for the wrong person
+               
                 if (!target || target.id === 0) {
                     const mostRecent = data[0];
                     const senderId = mostRecent.sender?.id ? Number(mostRecent.sender.id) : null;
@@ -110,7 +109,7 @@ export default function ChatHistoryModal({ open, onClose, initialTarget }: ChatH
         if (open && token) {
             const effectiveTarget = initialTarget || null;
             setReplyTo(effectiveTarget);
-            setHistory([]); // Clear while loading
+            setHistory([]); 
             fetchHistory(effectiveTarget);
         }
     }, [open, token, `${initialTarget?.id}-${initialTarget?.fullName}`]);
@@ -138,8 +137,8 @@ export default function ChatHistoryModal({ open, onClose, initialTarget }: ChatH
         try {
             await sendNotification(replyTo.id, replyText, token);
             setReplyText("");
-            await fetchHistory(); // Refresh local history
-            refresh(); // Refresh global notification bell count
+            await fetchHistory();
+            refresh();
         } catch (error) {
             console.error("Failed to send reply:", error);
             alert("Failed to send reply. Please try again.");

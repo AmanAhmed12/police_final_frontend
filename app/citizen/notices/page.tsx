@@ -33,7 +33,7 @@ export default function CitizenNoticesPage() {
             if (token) {
                 try {
                     const data = await getNotices(token);
-                    // Sort by newest first
+                   
                     const sortedData = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
                     setNotices(sortedData);
                 } catch (error) {
@@ -262,7 +262,7 @@ export default function CitizenNoticesPage() {
                                                         {notice.createdBy?.fullName || 'Police Department'}
                                                     </Typography>
                                                 </Box>
-                                                {/* Optional: Add an action button here if needed in future */}
+                                               
                                             </Box>
                                         </Box>
                                     </Box>

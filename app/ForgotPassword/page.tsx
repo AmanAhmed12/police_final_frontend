@@ -18,7 +18,7 @@ import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useRouter } from "next/navigation";
 
-/* ===== SAME THEME (UNCHANGED) ===== */
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",

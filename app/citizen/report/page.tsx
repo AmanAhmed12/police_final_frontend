@@ -39,11 +39,11 @@ export default function ReportDashboard() {
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Pagination state
+   
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // Snackbar state
+   
     const [snackbar, setSnackbar] = useState<{
         open: boolean;
         message: string;
@@ -68,7 +68,7 @@ export default function ReportDashboard() {
             if (!token) return;
             setLoading(true);
             try {
-                // Using the real professional API call with Redux token
+               
                 const data = await getReportRequests(token);
                 setReports(data);
             } catch (error) {
@@ -123,11 +123,11 @@ export default function ReportDashboard() {
         setLoading(true);
         try {
             if (selectedId) {
-                // Update logic (Backend DTO specific implementation pending)
+               
                 setReports(reports.map(r => r.id === selectedId ? { ...r, ...formData } : r));
                 showMessage("Application updated successfully!");
             } else {
-                // Professional application submission with Redux token
+               
                 const newReport = await createReportRequest(formData, token);
                 setReports([newReport, ...reports]);
                 showMessage("Official application submitted successfully!");
@@ -152,7 +152,7 @@ export default function ReportDashboard() {
     const handleDelete = async (id: string) => {
         if (!window.confirm("Are you sure you want to cancel this application?")) return;
         try {
-            // Calling real backend to delete/cancel the request with Redux token
+           
             await deleteReportRequest(id, token);
             setReports(reports.filter(r => r.id !== id));
             showMessage("Application cancelled successfully!");

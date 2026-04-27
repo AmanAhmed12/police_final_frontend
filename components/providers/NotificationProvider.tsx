@@ -32,7 +32,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         if (!token) return;
 
         try {
-            // Proactive check for token expiration
+           
             const tokenParts = token.split('.');
             if (tokenParts.length === 3) {
                 const payload = JSON.parse(atob(tokenParts[1]));
@@ -45,7 +45,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             if (isInitial) dispatch(setLoading(true));
             const data = await getMyNotifications(token);
 
-            // Check for new notifications to show toast
+           
             if (!isInitial && data.length > notifications.length) {
                 const newNotifs = data.filter(
                     (n: any) => !notifications.find((old: any) => old.id === n.id)
@@ -59,7 +59,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                             message: latest.message,
                             sender: latest.sender.fullName
                         });
-                        // Play sound if possible
+                      
                         if (audioRef.current) {
                             audioRef.current.play().catch(() => { });
                         }
@@ -83,10 +83,10 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     useEffect(() => {
         if (token) {
             fetchNotifications(true);
-            const interval = setInterval(() => fetchNotifications(), 15000); // Poll every 15s
+            const interval = setInterval(() => fetchNotifications(), 15000);
             return () => clearInterval(interval);
         }
-    }, [token, notifications.length]); // Dependencies help but be careful of loops
+    }, [token, notifications.length]);
 
     return (
         <NotificationContext.Provider value={{ refresh: () => fetchNotifications() }}>

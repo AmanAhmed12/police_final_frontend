@@ -39,7 +39,7 @@ export default function OfficerReportsManagement() {
     const [loading, setLoading] = useState(false);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-    // Dialog state
+   
     const [openViewDialog, setOpenViewDialog] = useState(false);
     const [openUploadDialog, setOpenUploadDialog] = useState(false);
     const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false);
@@ -49,7 +49,7 @@ export default function OfficerReportsManagement() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // Snackbar state
+   
     const [snackbar, setSnackbar] = useState<{
         open: boolean;
         message: string;
@@ -74,7 +74,7 @@ export default function OfficerReportsManagement() {
             if (!token) return;
             setLoading(true);
             try {
-                // Fetching real reports using the actual Redux token
+              
                 const data = await getAllReportRequests(token);
                 setReports(data);
             } catch (error) {
@@ -90,7 +90,7 @@ export default function OfficerReportsManagement() {
         if (!token) return;
         setActionLoading(id);
         try {
-            // Calling the real backend with the Redux token
+           
             const updated = await updateReportStatus(id, "In Progress", token);
             setReports(prev => prev.map(r => r.id === id ? updated : r));
             showMessage("Application accepted successfully!");
@@ -121,7 +121,7 @@ export default function OfficerReportsManagement() {
         }
         setLoading(true);
         try {
-            // Calling the consolidated professional service with the Redux token
+           
             const updatedReport = await finalizeReportRequest(selectedReport.id, selectedFile, token);
 
             setReports(prev => prev.map(r =>

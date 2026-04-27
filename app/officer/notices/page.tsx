@@ -34,7 +34,7 @@ export default function NoticePage() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const token = useSelector((state: RootState) => state.auth.user?.token);
 
-    // --- State ---
+   
     const [notices, setNotices] = useState<Notice[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [openDialog, setOpenDialog] = useState(false);
@@ -50,7 +50,7 @@ export default function NoticePage() {
         category: 'General'
     });
 
-    // --- API Logic ---
+   
     const fetchNotices = useCallback(async () => {
         if (!token) return;
         setFetching(true);
@@ -70,7 +70,7 @@ export default function NoticePage() {
         fetchNotices();
     }, [fetchNotices]);
 
-    // --- Handlers ---
+    
     const handleOpenDialog = (notice?: Notice) => {
         if (notice) {
             setCurrentNotice(notice);
@@ -134,7 +134,7 @@ export default function NoticePage() {
         }
     };
 
-    // Helper to format dates safely
+   
     const formatDate = (dateString?: string) => {
         if (!dateString) return "";
         return new Date(dateString).toLocaleDateString(undefined, {

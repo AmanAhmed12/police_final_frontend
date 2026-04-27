@@ -33,19 +33,19 @@ export default function AdminGuidelinesPage() {
     const theme = useTheme();
     const token = useSelector((state: RootState) => state.auth.user?.token);
 
-    // Data State
+    
     const [guidelines, setGuidelines] = useState<Guideline[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Search & Filter State
+    
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
 
-    // Pagination State
+    
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // Dialog State
+    
     const [openDialog, setOpenDialog] = useState(false);
     const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
     const [selectedGuideline, setSelectedGuideline] = useState<Partial<Guideline>>({
@@ -55,11 +55,11 @@ export default function AdminGuidelinesPage() {
         content: ''
     });
 
-    // Delete Dialog State
+    
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<number | null>(null);
 
-    // Snackbar State
+    
     const [snackbar, setSnackbar] = useState<{
         open: boolean;
         message: string;
@@ -88,7 +88,7 @@ export default function AdminGuidelinesPage() {
         fetchGuidelines();
     }, [token]);
 
-    // Derived Data
+    
     const filteredGuidelines = useMemo(() => {
         return guidelines.filter(item => {
             const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -106,7 +106,7 @@ export default function AdminGuidelinesPage() {
         return ['All', ...Array.from(new Set(guidelines.map(g => g.category)))];
     }, [guidelines]);
 
-    // Handlers
+    
     const handlePageChange = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -131,7 +131,7 @@ export default function AdminGuidelinesPage() {
     const handleSave = async () => {
         if (!token) return;
 
-        // Filter input to send only the fields the backend Guideline model expects
+
         const guidelineInput: GuidelineInput = {
             title: selectedGuideline.title ?? '',
             category: selectedGuideline.category ?? '',
@@ -199,7 +199,7 @@ export default function AdminGuidelinesPage() {
 
     return (
         <Box sx={{ p: { xs: 2, md: 4 } }}>
-            {/* Header Content */}
+           
             <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={4} flexWrap="wrap" gap={2}>
                 <Box>
                     <Typography variant="h4" fontWeight="800" color="primary" sx={{ letterSpacing: '-1px', mb: 0.5 }}>
@@ -228,7 +228,7 @@ export default function AdminGuidelinesPage() {
                 </Zoom>
             </Box>
 
-            {/* Controls Section */}
+           
             <Paper elevation={0} sx={{ p: 2, mb: 3, borderRadius: '16px', border: '1px solid', borderColor: 'divider', display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <TextField
                     size="small"
@@ -258,7 +258,7 @@ export default function AdminGuidelinesPage() {
                 </Typography>
             </Paper>
 
-            {/* Table Section */}
+
             <Fade in timeout={800}>
                 <Paper elevation={0} sx={{ borderRadius: '16px', border: '1px solid', borderColor: 'divider', overflow: 'hidden' }}>
                     {loading ? (
@@ -367,7 +367,7 @@ export default function AdminGuidelinesPage() {
                 </Paper>
             </Fade>
 
-            {/* Create/Edit Dialog */}
+
             <Dialog
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
@@ -442,7 +442,7 @@ export default function AdminGuidelinesPage() {
                 </DialogActions>
             </Dialog>
 
-            {/* Delete Confirmation Dialog */}
+        
             <Dialog
                 open={deleteDialogOpen}
                 onClose={() => setDeleteDialogOpen(false)}
@@ -467,7 +467,7 @@ export default function AdminGuidelinesPage() {
                 </DialogActions>
             </Dialog>
 
-            {/* Notification Snackbar */}
+          
             <Snackbar
                 open={snackbar.open}
                 autoHideDuration={6000}

@@ -34,7 +34,7 @@ export default function NoticePage() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const token = useSelector((state: RootState) => state.auth.user?.token);
 
-    // --- State ---
+
     const [notices, setNotices] = useState<Notice[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [openDialog, setOpenDialog] = useState(false);
@@ -50,7 +50,7 @@ export default function NoticePage() {
         category: 'General'
     });
 
-    // --- API Logic ---
+
     const fetchNotices = useCallback(async () => {
         if (!token) return;
         setFetching(true);
@@ -70,7 +70,7 @@ export default function NoticePage() {
         fetchNotices();
     }, [fetchNotices]);
 
-    // --- Handlers ---
+
     const handleOpenDialog = (notice?: Notice) => {
         if (notice) {
             setCurrentNotice(notice);
@@ -134,7 +134,7 @@ export default function NoticePage() {
         }
     };
 
-    // Helper to format dates safely
+    
     const formatDate = (dateString?: string) => {
         if (!dateString) return "";
         return new Date(dateString).toLocaleDateString(undefined, {
@@ -144,7 +144,7 @@ export default function NoticePage() {
 
     return (
         <Box sx={{ p: { xs: 2, md: 5 }, maxWidth: 1100, margin: '0 auto', minHeight: '100vh' }}>
-            {/* Header Section */}
+            
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5, flexWrap: 'wrap', gap: 3 }}>
                 <Box>
                     <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary', letterSpacing: '-1.5px', mb: 1 }}>
@@ -171,7 +171,7 @@ export default function NoticePage() {
                 </Button>
             </Box>
 
-            {/* Search Bar */}
+            
             <Paper
                 elevation={0}
                 sx={{
@@ -194,7 +194,7 @@ export default function NoticePage() {
                 />
             </Paper>
 
-            {/* List Section */}
+                
             <Paper sx={{ borderRadius: '24px', overflow: 'hidden', border: `1px solid ${theme.palette.divider}` }} elevation={0}>
                 {fetching ? (
                     <Box sx={{ py: 15, textAlign: 'center' }}>
@@ -253,9 +253,9 @@ export default function NoticePage() {
                                                     {notice.content}
                                                 </Typography>
 
-                                                {/* Meta Info Section */}
+                                                
                                                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                                    {/* Creation Row */}
+                                                    
                                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, color: 'text.disabled', flexWrap: 'wrap' }}>
                                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                                             <CalendarIcon sx={{ fontSize: 16 }} />
@@ -270,7 +270,7 @@ export default function NoticePage() {
                                                         </Box>
                                                     </Box>
 
-                                                    {/* Update Row - Only shows if data exists */}
+                                                    
                                                     {(notice.updatedAt || notice.updatedBy) && (
                                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'info.main', opacity: 0.8 }}>
                                                             <HistoryIcon sx={{ fontSize: 14 }} />
@@ -313,7 +313,7 @@ export default function NoticePage() {
                 )}
             </Paper>
 
-            {/* Save/Edit Dialog */}
+            
             <Dialog
                 open={openDialog}
                 onClose={() => !loading && setOpenDialog(false)}
@@ -365,7 +365,7 @@ export default function NoticePage() {
                 </DialogActions>
             </Dialog>
 
-            {/* Delete Confirmation Dialog */}
+            
             <Dialog open={openDeleteDialog} onClose={() => !loading && setOpenDeleteDialog(false)}>
                 <DialogTitle sx={{ fontWeight: 700 }}>Confirm Deletion</DialogTitle>
                 <DialogContent>
@@ -384,7 +384,7 @@ export default function NoticePage() {
                 </DialogActions>
             </Dialog>
 
-            {/* Global Snackbar */}
+            
             <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
                 <Alert severity={snackbar.severity} variant="filled">{snackbar.message}</Alert>
             </Snackbar>

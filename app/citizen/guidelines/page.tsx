@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store';
 import { getGuidelines, Guideline } from '@/services/guidelines';
 
-// 1. Import your service and interface
+
 
 
 export default function GuidelinesPage() {
@@ -25,14 +25,14 @@ export default function GuidelinesPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [activeCategory, setActiveCategory] = useState("All");
 
-    // 2. Access the token from Redux
+   
     const token = useSelector((state: any) => state.auth.user?.token);
 
     useEffect(() => {
         const fetchGuidelines = async () => {
             setLoading(true);
             try {
-                // 3. Call the professional API service
+               
                 const data = await getGuidelines(token);
                 setGuidelines(data);
                 setFilteredGuidelines(data);
@@ -46,7 +46,7 @@ export default function GuidelinesPage() {
         if (token) fetchGuidelines();
     }, [token]);
 
-    // 4. Filtering Logic remains the same
+  
     useEffect(() => {
         const lowerTerm = searchTerm.toLowerCase();
         const filtered = guidelines.filter(item =>

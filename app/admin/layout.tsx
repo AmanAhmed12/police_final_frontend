@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
-import { darkTheme } from "@/components/theme"; // Adjust path if necessary
+import { darkTheme } from "@/components/theme"; 
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 
@@ -30,7 +30,7 @@ export default function AdminLayout({
                         flexGrow: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        width: { md: `calc(100% - 280px)` } // Adjust based on sidebar width
+                        width: { md: `calc(100% - 280px)` } 
                     }}
                 >
                     <AdminTopbar onSidebarOpen={() => setSidebarOpen(true)} />

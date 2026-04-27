@@ -17,7 +17,7 @@ import { Complaint } from '@/app/services/complaintService';
 import { ReportRequest } from '@/app/services/reportService';
 import { formatDistanceToNow } from 'date-fns';
 
-// Activity interface for combined feed
+
 interface Activity {
     id: string;
     userName: string;
@@ -35,13 +35,13 @@ interface RecentActivityTableProps {
 }
 
 export default function RecentActivityTable({ complaints, reports, loading }: RecentActivityTableProps) {
-    // Combine and sort activities
+  
     const activities: Activity[] = React.useMemo(() => {
         const combined: Activity[] = [
             ...complaints.map(c => ({
                 id: `c-${c.id}`,
                 userName: c.citizenName || 'Unknown User',
-                userEmail: '', // Not always available in DTO
+                userEmail: '', 
                 action: `Submitted complaint: ${c.title}`,
                 status: c.status || 'pending',
                 date: new Date(c.createdAt),
