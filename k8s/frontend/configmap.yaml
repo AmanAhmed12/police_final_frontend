@@ -4,5 +4,6 @@ metadata:
   name: frontend-config
 data:
   NEXT_PUBLIC_API_BASE_URL: ""
+  BACKEND_URL: "http://backend-service:80"
   PAYHERE_MERCHANT_ID: "1234000"
   NEXT_PUBLIC_PAYHERE_MERCHANT_ID: "1234000"
