@@ -11,7 +11,7 @@ export interface Duty {
     statusUpdatedAt?: string;
 }
 
-const API_URL = 'http://localhost:8080/api/duties';
+const API_URL = '/api/duties';
 
 export const dutyService = {
     getAllDuties: async (token: string): Promise<Duty[]> => {
